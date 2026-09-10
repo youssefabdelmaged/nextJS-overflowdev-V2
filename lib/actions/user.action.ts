@@ -23,23 +23,29 @@ export async function getUserById(params: any) {
     await connectToDatabase();
     const { userId } = params;
     const user = await User.findOne({ clerkId: userId });
-
+    if (!user) return null;
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
-    throw error;
     console.log(error);
+    return null;
   }
 }
 export async function createUser(userData: CreateUserParams) {
   try {
     await connectToDatabase();
 
-    const newUser = await User.create(userData);
+    // Use upsert so duplicate clerkId/email never throws a duplicate key error.
+    // If the user already exists, return the existing document.
+    const newUser = await User.findOneAndUpdate(
+      { clerkId: userData.clerkId },
+      { $setOnInsert: userData },
+      { upsert: true, new: true }
+    );
 
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
-    throw error;
-    console.log(error);
+    console.log("createUser error:", error);
+    return null;
   }
 }
 
