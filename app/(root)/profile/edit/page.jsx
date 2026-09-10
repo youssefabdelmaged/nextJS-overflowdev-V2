@@ -9,6 +9,8 @@ const EditProfile = async () => {
 
   const mongoUser = await getUserById({ userId });
 
+  if (!mongoUser) return null;
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Edit Profile</h1>

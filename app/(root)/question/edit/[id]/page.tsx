@@ -11,6 +11,8 @@ const EditQuestion = async ({ params }: ParamsProps) => {
 
   const mongoUser = await getUserById({ userId });
 
+  if (!mongoUser) return null;
+
   const result = await getQuestionsById({ questionId: params.id });
 
   return (
