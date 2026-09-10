@@ -1,15 +1,28 @@
 import Question from "@/components/forms/Question";
 import { getQuestionsById } from "@/lib/actions/question.action";
-import { getUserById } from "@/lib/actions/user.action";
+import { createUser, getUserById } from "@/lib/actions/user.action";
 import { ParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const EditQuestion = async ({ params }: ParamsProps) => {
   const { userId } = auth();
 
   if (!userId) return null;
 
-  const mongoUser = await getUserById({ userId });
+  let mongoUser = await getUserById({ userId });
+
+  if (!mongoUser) {
+    const clerkUser = await currentUser();
+    if (clerkUser) {
+      mongoUser = await createUser({
+        clerkId: clerkUser.id,
+        name: `${clerkUser.firstName}${clerkUser.lastName ? ` ${clerkUser.lastName}` : ""}`,
+        username: clerkUser.username ?? clerkUser.id,
+        email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
+        picture: clerkUser.imageUrl,
+      });
+    }
+  }
 
   if (!mongoUser) return null;
 
