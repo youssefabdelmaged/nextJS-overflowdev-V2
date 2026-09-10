@@ -13,7 +13,7 @@ import Interaction from "@/database/interaction.model";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { content, author, question, path } = params;
     const newAnswer = await Answer.create({ content, author, question });
@@ -31,7 +31,7 @@ export async function createAnswer(params: CreateAnswerParams) {
 
 export async function getAnswers(params: GetAnswersParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { questionId, sortBy, page, pageSize } = params;
 
@@ -48,7 +48,7 @@ export async function getAnswers(params: GetAnswersParams) {
 
 export async function upvoteAnswer(params: AnswerVoteParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
 
@@ -82,7 +82,7 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
 
 export async function downvoteAnswer(params: AnswerVoteParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
 
@@ -115,7 +115,7 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
 
 export async function deleteAnswer(params: DeleteAnswerParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { answerId, path } = params;
 

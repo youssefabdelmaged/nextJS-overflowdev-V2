@@ -18,7 +18,7 @@ import Interaction from "@/database/interaction.model";
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
     const questions = await Question.find({})
       .populate({
         path: "tags",
@@ -35,7 +35,7 @@ export async function getQuestions(params: GetQuestionsParams) {
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { title, content, tags, author, path } = params;
     const question = await Question.create({
@@ -65,7 +65,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 
 export async function getQuestionsById(params: GetQuestionByIdParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { questionId } = params;
 
@@ -91,7 +91,7 @@ export async function getQuestionsById(params: GetQuestionByIdParams) {
 
 export async function upvoteQuestion(params: QuestionVoteParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
@@ -124,7 +124,7 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
 }
 export async function downvoteQuestion(params: QuestionVoteParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
@@ -158,7 +158,7 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
 
 export async function editQuestion(params: EditQuestionParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
     const { questionId, title, content, path } = params;
 
     const question = await Question.findById(questionId).populate("tags");
@@ -180,7 +180,7 @@ export async function editQuestion(params: EditQuestionParams) {
 }
 export async function deleteQuestion(params: DeleteQuestionParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { questionId, path } = params;
 
@@ -203,7 +203,7 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 
 export async function getHotQuestions() {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const hotQuestions = await Question.find({})
       .sort({
