@@ -19,16 +19,17 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
     const { userId, limit = 3 } = params;
     const user = await User.findById(userId);
 
-    if (!user) throw new Error("User not Found");
+    if (!user) return [];
 
+    // TODO: fetch actual interacted tags from Interaction model
+    // For now return placeholder tags
     return [
       { _id: "1", name: "tag1" },
       { _id: "2", name: "tag2" },
     ];
   } catch (error) {
     console.log(error);
-
-    throw error;
+    return [];
   }
 }
 

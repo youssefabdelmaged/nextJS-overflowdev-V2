@@ -17,6 +17,11 @@ const Profile = async ({ searchParams, params }: URLProps) => {
   const userInfo = await getUserInfo({ userId: params.id });
   const { userId: clerkId } = auth();
 
+  if (!userInfo?.user) {
+    return <div className="text-dark100_light900 flex-center h-full">User not found.</div>;
+  }
+
+
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row ">

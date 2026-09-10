@@ -14,11 +14,15 @@ import React from "react";
 
 const QuestionDetails = async ({ searchParams, params }: any) => {
   const { userId: clerkId } = auth();
-  let mongoUser;
+  let mongoUser = null;
   if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
   }
   const result = await getQuestionsById({ questionId: params.id });
+
+  if (!result) {
+    return <div className="text-dark100_light900">Question not found.</div>;
+  }
 
   return (
     <>
@@ -40,16 +44,18 @@ const QuestionDetails = async ({ searchParams, params }: any) => {
             </p>
           </Link>
           <div className="flex justify-end">
-            <Votes
-              type="Question"
-              itemId={JSON.stringify(result._id)}
-              userId={JSON.stringify(mongoUser._id)}
-              upvotes={result.upvotes.length}
-              hasupVoted={result.upvotes.includes(mongoUser._id)}
-              downvotes={result.downvotes.length}
-              hasdownVoted={result.downvotes.includes(mongoUser._id)}
-              hasSaved={mongoUser?.saved.includes(result._id)}
-            />
+            {mongoUser && (
+              <Votes
+                type="Question"
+                itemId={JSON.stringify(result._id)}
+                userId={JSON.stringify(mongoUser._id)}
+                upvotes={result.upvotes.length}
+                hasupVoted={result.upvotes.includes(mongoUser._id)}
+                downvotes={result.downvotes.length}
+                hasdownVoted={result.downvotes.includes(mongoUser._id)}
+                hasSaved={mongoUser?.saved?.includes(result._id)}
+              />
+            )}
           </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
@@ -86,7 +92,7 @@ const QuestionDetails = async ({ searchParams, params }: any) => {
       <div className="mt-8 flex flex-wrap gap-2">
         {result.tags.map((tag: any) => (
           <RenderTags
-            key={tag.id}
+            key={tag._id}
             _id={tag._id}
             name={tag.name}
             showCount={false}
@@ -96,17 +102,19 @@ const QuestionDetails = async ({ searchParams, params }: any) => {
 
       <AllAnswers
         questionId={result._id}
-        userId={mongoUser._id}
+        userId={mongoUser?._id}
         totalAnswers={result.answers.length}
         page={searchParams?.page}
         filter={searchParams?.filter}
       />
 
-      <Answer
-        question={result.content}
-        questionId={JSON.stringify(result._id)}
-        authorId={JSON.stringify(mongoUser._id)}
-      />
+      {mongoUser && (
+        <Answer
+          question={result.content}
+          questionId={JSON.stringify(result._id)}
+          authorId={JSON.stringify(mongoUser._id)}
+        />
+      )}
     </>
   );
 };

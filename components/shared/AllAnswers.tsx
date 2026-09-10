@@ -10,7 +10,7 @@ import Votes from "./Votes";
 
 interface Props {
   questionId: string;
-  userId: string;
+  userId?: string;
   totalAnswers: number;
   page?: number;
   filter?: string;
@@ -59,15 +59,17 @@ const AllAnswers = async ({
                   </div>
                 </Link>
                 <div className="flex justify-end">
-                  <Votes
-                    type="Answer"
-                    itemId={JSON.stringify(answer._id)}
-                    userId={JSON.stringify(userId)}
-                    upvotes={answer.upvotes.length}
-                    hasupVoted={answer.upvotes.includes(userId)}
-                    downvotes={answer.downvotes.length}
-                    hasdownVoted={answer.downvotes.includes(userId)}
-                  />
+                  {userId && (
+                    <Votes
+                      type="Answer"
+                      itemId={JSON.stringify(answer._id)}
+                      userId={JSON.stringify(userId)}
+                      upvotes={answer.upvotes.length}
+                      hasupVoted={answer.upvotes.includes(userId)}
+                      downvotes={answer.downvotes.length}
+                      hasdownVoted={answer.downvotes.includes(userId)}
+                    />
+                  )}
                 </div>
               </div>
             </div>
