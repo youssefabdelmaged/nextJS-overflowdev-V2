@@ -99,8 +99,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
     return { users: JSON.parse(JSON.stringify(users)) };
   } catch (error) {
     console.log(error);
-
-    throw error;
+    return { users: [] };
   }
 }
 
@@ -167,7 +166,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      return { questions: [] };
     }
 
     const savedQuestions = user.saved;
@@ -175,8 +174,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     return { questions: JSON.parse(JSON.stringify(savedQuestions)) };
   } catch (error) {
     console.log(error);
-
-    throw error;
+    return { questions: [] };
   }
 }
 
