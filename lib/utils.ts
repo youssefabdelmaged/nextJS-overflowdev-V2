@@ -5,9 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getTimeStamp = (createdAt: Date): string => {
+export const getTimeStamp = (createdAt: Date | string): string => {
+  const date = typeof createdAt === 'string' ? new Date(createdAt) : createdAt;
   const now = new Date();
-  const seconds = Math.floor((now.getTime() - createdAt.getTime()) / 1000);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   let interval = Math.floor(seconds / 31536000);
   if (interval >= 1) return `${interval} year${interval > 1 ? "s" : ""} ago`;
@@ -41,8 +42,9 @@ export function formatNumber(num: number): string {
 
 
 
-export function getMonthYear(date: Date): string {
-  const month = date.toLocaleString('default', { month: 'long' });
-  const year = date.getFullYear();
+export function getMonthYear(date: Date | string): string {
+  const parsedDate = typeof date === 'string' ? new Date(date) : date;
+  const month = parsedDate.toLocaleString('default', { month: 'long' });
+  const year = parsedDate.getFullYear();
   return `${month} ${year}`;
 }
