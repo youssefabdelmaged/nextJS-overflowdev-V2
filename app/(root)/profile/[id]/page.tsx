@@ -4,30 +4,50 @@ import QuestionTab from "@/components/shared/QuestionTab";
 import Stats from "@/components/shared/Stats";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getUserInfo } from "@/lib/actions/user.action";
+import { createUser, getUserInfo } from "@/lib/actions/user.action";
 import { getMonthYear } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { SignedIn } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const Profile = async ({ searchParams, params }: URLProps) => {
-  const userInfo = await getUserInfo({ userId: params.id });
   const { userId: clerkId } = auth();
 
-  if (!userInfo?.user) {
-    return <div className="text-dark100_light900 flex-center h-full">User not found.</div>;
+  let userInfo = await getUserInfo({ userId: params.id });
+
+  // If viewing own profile and MongoDB record doesn't exist, create it
+  if (!userInfo && clerkId === params.id) {
+    const clerkUser = await currentUser();
+    if (clerkUser) {
+      await createUser({
+        clerkId: clerkUser.id,
+        name: `${clerkUser.firstName}${clerkUser.lastName ? ` ${clerkUser.lastName}` : ""}`,
+        username: clerkUser.username ?? clerkUser.id,
+        email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
+        picture: clerkUser.imageUrl,
+      });
+      // Re-fetch after creation
+      userInfo = await getUserInfo({ userId: params.id });
+    }
   }
 
+  if (!userInfo?.user) {
+    return (
+      <div className="text-dark100_light900 flex-center h-full">
+        User not found.
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row ">
         <div className="flex flex-col items-start gap-4 lg:flex-row">
           <Image
-            src={userInfo?.user.picture}
+            src={userInfo.user.picture}
             alt="user picture"
             width={140}
             height={140}
