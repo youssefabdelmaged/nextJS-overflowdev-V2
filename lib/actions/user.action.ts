@@ -24,7 +24,7 @@ export async function getUserById(params: any) {
     const { userId } = params;
     const user = await User.findOne({ clerkId: userId });
 
-    return user;
+    return JSON.parse(JSON.stringify(user));
   } catch (error) {
     throw error;
     console.log(error);
@@ -36,7 +36,7 @@ export async function createUser(userData: CreateUserParams) {
 
     const newUser = await User.create(userData);
 
-    return newUser;
+    return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     throw error;
     console.log(error);
@@ -81,7 +81,7 @@ export async function deleteUser(params: DeleteUserParams) {
     // TODO:delete user answers ,comments,etc
 
     const deletedUser = await User.findByIdAndDelete(user._id);
-    return deletedUser;
+    return JSON.parse(JSON.stringify(deletedUser));
   } catch (error) {
     throw error;
     console.log(error);
@@ -96,7 +96,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
 
     const users = await User.find({}).sort({ createdAt: -1 });
 
-    return { users };
+    return { users: JSON.parse(JSON.stringify(users)) };
   } catch (error) {
     console.log(error);
 
@@ -172,7 +172,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
     const savedQuestions = user.saved;
 
-    return { questions: savedQuestions };
+    return { questions: JSON.parse(JSON.stringify(savedQuestions)) };
   } catch (error) {
     console.log(error);
 
@@ -194,11 +194,13 @@ export async function getUserInfo(params: GetUserByIdParams) {
     const totalQuestions = await Question.countDocuments({ author: user._id });
     const totalAnswers = await Answer.countDocuments({ author: user._id });
 
-    return {
-      user,
-      totalQuestions,
-      totalAnswers,
-    };
+    return JSON.parse(
+      JSON.stringify({
+        user,
+        totalQuestions,
+        totalAnswers,
+      })
+    );
   } catch (error) {
     console.log(error);
 
@@ -220,7 +222,9 @@ export async function getUserQuestion(params: GetUserStatsParams) {
       .populate("tags", "_id name")
       .populate("author", "_id clerkId name picture");
 
-    return { totalQuestion, question: userQuestions };
+    return JSON.parse(
+      JSON.stringify({ totalQuestion, question: userQuestions })
+    );
   } catch (error) {
     console.log(error);
 
@@ -240,7 +244,7 @@ export async function getUserAnswer(params: GetUserStatsParams) {
       .populate("question", "_id title")
       .populate("author", "_id clerkId name picture");
 
-    return { totalAnswer, answer: userAnswers };
+    return JSON.parse(JSON.stringify({ totalAnswer, answer: userAnswers }));
   } catch (error) {
     console.log(error);
 

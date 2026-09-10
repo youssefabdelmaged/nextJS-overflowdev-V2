@@ -38,7 +38,7 @@ export async function getAllTags(params: GetAllTagsParams) {
 
     const tags = await Tag.find({});
 
-    return { tags };
+    return { tags: JSON.parse(JSON.stringify(tags)) };
   } catch (error) {
     console.log(error);
 
@@ -74,7 +74,7 @@ export async function getQuestionsByTAgId(params: GetQuestionsByTagIdParams) {
     }
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+    return JSON.parse(JSON.stringify({ tagTitle: tag.name, questions }));
   } catch (error) {
     console.log(error);
 
@@ -92,7 +92,7 @@ export async function getTopPopularTags() {
       { $limit: 5 },
     ]);
 
-    return popularTags
+    return JSON.parse(JSON.stringify(popularTags));
   } catch (error) {
     console.log(error);
 

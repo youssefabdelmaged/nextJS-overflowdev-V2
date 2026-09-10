@@ -39,7 +39,7 @@ export async function getAnswers(params: GetAnswersParams) {
       .populate("author", "_id clerkId name picture")
       .sort({ createdAt: -1 });
 
-    return { answers };
+    return { answers: JSON.parse(JSON.stringify(answers)) };
   } catch (error) {
     console.log();
     throw error;

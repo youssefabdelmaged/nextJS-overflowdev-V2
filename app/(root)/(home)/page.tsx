@@ -41,7 +41,7 @@ const Home = async () => {
 
       <div className=" mt-10 flex flex-col w-full gap-6">
         {questions.length > 0 ? (
-          questions.map((item) => (
+          questions.map((item: any) => (
             <QuestionCard
               key={item._id}
               _id={item._id}

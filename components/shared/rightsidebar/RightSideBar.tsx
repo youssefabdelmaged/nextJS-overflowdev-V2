@@ -47,7 +47,7 @@ const RightSideBar = async () => {
       <div>
         <h3 className="h3-bold text-dark200_light900"> Top Questions</h3>
         <div className="mt-7 flex w-full flex-col gap-[30px]">
-          {hotQuestions.map((q) => (
+          {hotQuestions.map((q: any) => (
             <Link
               key={q._id}
               href={`/question/${q._id}`}
@@ -68,7 +68,7 @@ const RightSideBar = async () => {
       <div className="mt-16">
         <h3 className="h3-bold text-dark200_light900"> Top Questions</h3>
         <div className="mt-7 flex flex-col gap-4">
-          {popularTags.map((tag) => (
+          {popularTags.map((tag: any) => (
             <RenderTags
               key={tag._id}
               _id={tag._id}

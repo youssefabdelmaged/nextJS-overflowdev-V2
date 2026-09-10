@@ -26,7 +26,7 @@ export async function getQuestions(params: GetQuestionsParams) {
       })
       .populate({ path: "author", model: User })
       .sort({ createdAt: -1 });
-    return { questions };
+    return { questions: JSON.parse(JSON.stringify(questions)) };
   } catch (error) {
     console.log(error);
     throw error;
@@ -81,7 +81,7 @@ export async function getQuestionsById(params: GetQuestionByIdParams) {
         select: "_id clerkId name picture",
       });
 
-    return question;
+    return JSON.parse(JSON.stringify(question));
   } catch (error) {
     console.log(error);
 
@@ -212,7 +212,7 @@ export async function getHotQuestions() {
       })
       .limit(5);
 
-    return hotQuestions;
+    return JSON.parse(JSON.stringify(hotQuestions));
   } catch (error) {
     console.log(error);
 
